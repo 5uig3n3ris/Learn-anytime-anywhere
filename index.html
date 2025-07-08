@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-language English Learning Platform</title>
+  <style>
+    :root {
+      --primary: #0a9396;
+      --secondary: #005f73;
+      --bg: #f8f9fa;
+      --card: #ffffff;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html[dir="rtl"] {
+      direction: rtl;
+      text-align: right;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: #333;
+      overflow-x: hidden;
+    }
+    header, footer {
+      background-color: var(--secondary);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      animation: fadeIn 1s ease-out forwards;
+    }
+    .language-switch {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .language-switch select {
+      padding: 0.4rem;
+      border-radius: 4px;
+      border: none;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: var(--card);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: slideUp 1s ease-out forwards;
+    }
+    section {
+      margin: 2rem 0;
+      animation: fadeInSlide 1s ease forwards;
+    }
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    iframe, audio {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .flashcard-toggle {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .flashcard-toggle button {
+      padding: 0.5rem 1rem;
+      background-color: var(--primary);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .flashcard-toggle button:hover {
+      background-color: #007f86;
+    }
+    .flashcard-set {
+      display: none;
+      transition: transform 0.3s ease;
+    }
+    .flashcard-set.active {
+      display: block;
+      transform: scale(1.02);
+    }
+    .btn {
+      padding: 0.7rem 1.2rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    .user-info input {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    progress {
+      width: 100%;
+      height: 1.2rem;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeInSlide { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="language-switch">
+      <select id="languageSelect" onchange="switchLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+    <h1 data-i18n="headerTitle">English Learning Platform</h1>
+    <p data-i18n="headerSubtitle">Master English at your own pace</p>
+  </header>
+
+  <div class="container">
+    <div class="user-info">
+      <input type="text" id="username" placeholder="Your name">
+      <input type="email" id="useremail" placeholder="Your email">
+      <button onclick="saveUserInfo()">Save Info</button>
+    </div>
+
+    <section>
+      <h2 data-i18n="videoSection">🎬 Embedded Video</h2>
+      <iframe src="https://www.youtube.com/embed/your_video_id" allowfullscreen></iframe>
+    </section>
+
+    <section>
+      <h2 data-i18n="audioSection">🎧 Audio Player</h2>
+      <audio controls>
+        <source src="your-audio-file.mp3" type="audio/mpeg">
+      </audio>
+    </section>
+
+    <section>
+      <h2 data-i18n="flashcardSection">🧠 Flashcards</h2>
+      <button onclick="continueLast()">Continue where you left off</button>
+      <div class="flashcard-toggle">
+        <button onclick="showSet('set1')" data-i18n="vocabBtn">Vocabulary</button>
+        <button onclick="showSet('set2')" data-i18n="grammarBtn">Grammar</button>
+        <button onclick="showSet('set3')" data-i18n="phrasalBtn">Phrasal Verbs</button>
+      </div>
+      <div id="set1" class="flashcard-set">
+        <iframe id="iframe1" src="" height="400"></iframe>
+      </div>
+      <div id="set2" class="flashcard-set">
+        <iframe id="iframe2" src="" height="400"></iframe>
+      </div>
+      <div id="set3" class="flashcard-set">
+        <iframe id="iframe3" src="" height="400"></iframe>
+      </div>
+      <p><strong>Progress:</strong> <span id="progressBar">0%</span></p>
+      <progress id="progressValue" value="0" max="100"></progress>
+    </section>
+
+    <section>
+      <h2 data-i18n="paypalSection">💳 Pay with PayPal</h2>
+      <a href="#" class="btn">PayPal Button</a>
+    </section>
+
+    <section>
+      <h2 data-i18n="bankSection">🏦 Manual Payment</h2>
+      <a href="https://forms.gle/your-form-id" class="btn">Manual Payment Form</a>
+    </section>
+
+    <section>
+      <h2>📤 Export Data</h2>
+      <button onclick="exportProgress()" class="btn">Download CSV</button>
+    </section>
+  </div>
+
+  <footer>
+    <p data-i18n="footer">&copy; 2025 English Learning Platform</p>
+  </footer>
+
+  <script>
+    const flashcardSets = {
+      en: ["https://quizlet.com/en-vocab/embed","https://quizlet.com/en-grammar/embed","https://quizlet.com/en-phrasal/embed"],
+      es: ["https://quizlet.com/es-vocab/embed","https://quizlet.com/es-grammar/embed","https://quizlet.com/es-phrasal/embed"],
+      fr: ["https://quizlet.com/fr-vocab/embed","https://quizlet.com/fr-grammar/embed","https://quizlet.com/fr-phrasal/embed"],
+      ar: ["https://quizlet.com/ar-vocab/embed","https://quizlet.com/ar-grammar/embed","https://quizlet.com/ar-phrasal/embed"]
+    };
+
+    const translations = {
+      en: { headerTitle: "English Learning Platform", headerSubtitle: "Master English at your own pace", videoSection: "🎬 Embedded Video", audioSection: "🎧 Audio Player", flashcardSection: "🧠 Flashcards", paypalSection: "💳 Pay with PayPal", bankSection: "🏦 Manual Payment", footer: "© 2025 English Learning Platform", vocabBtn: "Vocabulary", grammarBtn: "Grammar", phrasalBtn: "Phrasal Verbs" },
+      es: { headerTitle: "Plataforma de Aprendizaje de Inglés", headerSubtitle: "Domina el inglés a tu ritmo", videoSection: "🎬 Video Integrado", audioSection: "🎧 Reproductor de Audio", flashcardSection: "🧠 Tarjetas de Memoria", paypalSection: "💳 Pagar con PayPal", bankSection: "🏦 Pago Manual", footer: "© 2025 Plataforma de Inglés", vocabBtn: "Vocabulario", grammarBtn: "Gramática", phrasalBtn: "Verbos Frasales" },
+      fr: { headerTitle: "Plateforme d'Apprentissage de l'Anglais", headerSubtitle: "Maîtrisez l'anglais à votre rythme", videoSection: "🎬 Vidéo Intégrée", audioSection: "🎧 Lecteur Audio", flashcardSection: "🧠 Cartes Mémoire", paypalSection: "💳 Payer avec PayPal", bankSection: "🏦 Paiement Manuel", footer: "© 2025 Plateforme d'Anglais", vocabBtn: "Vocabulaire", grammarBtn: "Grammaire", phrasalBtn: "Verbes à particules" },
+      ar: { headerTitle: "منصة تعلم الإنجليزية", headerSubtitle: "تعلم الإنجليزية على وتيرتك الخاصة", videoSection: "🎬 فيديو مدمج", audioSection: "🎧 مشغل الصوت", flashcardSection: "🧠 بطاقات تعليمية", paypalSection: "💳 الدفع عبر بايبال", bankSection: "🏦 الدفع اليدوي", footer: "© 2025 منصة تعلم الإنجليزية", vocabBtn: "المفردات", grammarBtn: "القواعد", phrasalBtn: "الأفعال المركبة" }
+    };
+
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('preferredLang', lang);
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.innerText = translations[lang][key];
+      });
+      const sets = flashcardSets[lang];
+      document.getElementById('iframe1').src = sets[0];
+      document.getElementById('iframe2').src = sets[1];
+      document.getElementById('iframe3').src = sets[2];
+      const last = localStorage.getItem(`progress_${lang}`) || 'set1';
+      showSet(last);
+    }
+
+    function showSet(id) {
+      document.querySelectorAll('.flashcard-set').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      const lang = document.documentElement.lang;
+      localStorage.setItem(`progress_${lang}`, id);
+      updateProgressBar();
+    }
+
+    function continueLast() {
+      const lang = document.documentElement.lang;
+      const setId = localStorage.getItem(`progress_${lang}`) || 'set1';
+      showSet(setId);
+    }
+
+    function updateProgressBar() {
+      const lang = document.documentElement.lang;
+      const sets = ['set1', 'set2', 'set3'];
+      const current = localStorage.getItem(`progress_${lang}`);
+      const index = sets.indexOf(current);
+      const percent = Math.round(((index + 1) / sets.length) * 100);
+      document.getElementById('progressBar').innerText = `${percent}%`;
+      document.getElementById('progressValue').value = percent;
+    }
+
+    function saveUserInfo() {
+      localStorage.setItem('userName', document.getElementById('username').value);
+      localStorage.setItem('userEmail', document.getElementById('useremail').value);
+      alert("Saved");
+    }
+
+    function exportProgress() {
+      const lang = localStorage.getItem('preferredLang') || 'en';
+      const name = localStorage.getItem('userName') || '';
+      const email = localStorage.getItem('userEmail') || '';
+      const flashcard = localStorage.getItem(`progress_${lang}`) || '';
+      const csv = `Name,Email,Language,Flashcard Set\n${name},${email},${lang},${flashcard}`;
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `progress-${lang}.csv`;
+      a.click();
+    }
+
+    window.onload = () => {
+      const savedLang = localStorage.getItem('preferredLang') || navigator.language.slice(0,2);
+      if (!['en','es','fr','ar'].includes(savedLang)) savedLang = 'en';
+      document.getElementById('languageSelect').value = savedLang;
+      switchLanguage(savedLang);
+      document.getElementById('username').value = localStorage.getItem('userName') || '';
+      document.getElementById('useremail').value = localStorage.getItem('userEmail') || '';
+    };
+  </script>
+</body>
+</html>
