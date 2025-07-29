@@ -16,9 +16,10 @@
       margin: 0;
       padding: 0;
     }
-    html[dir="rtl"] {
+    html[dir="rtl"] body{
       direction: rtl;
       text-align: right;
+      font-family: 'Tahoma', sans-serif;
     }
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -215,9 +216,9 @@
 
     <section>
       <h2 data-i18n="videoSection">🎬 Videos</h2>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/l5urA25m248" frameborder="0" allowfullscreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/6kBCQpVUodw" frameborder="0" allowfullscreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/m6C3QX_5gVg" frameborder="0" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/l5urA25m248" frameborder="0" loading = "lazy" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/6kBCQpVUodw" frameborder="0" loading = "lazy" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/m6C3QX_5gVg" frameborder="0" loading = "lazy" allowfullscreen></iframe>
     </section>
 
     <section>
@@ -277,17 +278,18 @@
 
   <!-- Referral Link -->
   <div class="referral-link-container">
-    <input type="text" id="referralLink" value="https://www.yourwebsite.com?ref=USER_REF_CODE" readonly>
+    <input type="text" id="referralLink" value="https://learn-anytime-anywhere.vercel.app/?ref=" readonly>
+    <button onclick="prefillInputField()">Generate Referral Link</button>
     <button onclick="copyReferralLink()">Copy Referral Link</button>
   </div>
 
   <!-- Social Media Share Buttons -->
   <div class="social-share-buttons">
-    <button onclick="shareOnTelegram()">Share on Telegram</button>
-    <button onclick="shareOnTwitter()">Share on Twitter</button>
-    <button onclick="shareOnInstagram()">Share on Instagram</button>
-    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
-    <button onclick="shareOnTikTok()">Share on TikTok</button>
+    <button id = "shareTelegram" onclick="shareOnTelegram()">Share on Telegram</button>
+    <button id = "shareTwitter" onclick="shareOnTwitter()">Share on Twitter</button>
+    <button id = "shareInstagram" onclick="shareOnInstagram()">Share on Instagram</button>
+    <button id = "shareWhatsApp" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+    <button id = "shareTiktok" onclick="shareOnTikTok()">Share on TikTok</button>
   </div>
   </section>
 
@@ -337,7 +339,7 @@
 
     function switchLanguage(lang) {
       document.documentElement.lang = lang;
-      document.documentElement.dir = lang === ('ar' || 'per') ? 'rtl' : 'ltr';
+      document.documentElement.dir = (lang === 'ar' || lang === 'per') ? 'rtl' : 'ltr';
       localStorage.setItem('preferredLang', lang);
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -406,15 +408,21 @@ function getReferralCode() {
   return localStorage.getItem('referralCode') || generateReferralCode();
 }
 
-
   // Update the referral link dynamically based on the user's referral code
   function updateReferralLink() {
   const referralCode = getReferralCode();
-  const referralLink = `https://www.yourwebsite.com?ref=${referralCode}`;
+  const referralLink = `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
   document.getElementById('referralLink').value = referralLink;
   // Update social media share buttons with the referral link
   updateSocialShareLinks(referralCode);
   }
+
+  function prefillInputField() {
+    const baseLink = "https://learn-anytime-anywhere.vercel.app/";
+    const inputField = document.getElementById('referralLink');
+    const generatedCode = generateReferralCode(); // Call the function to get the code
+    inputField.value = baseLink + generatedCode; // Set the input value to the base link plus the code
+    }
     
   function copyReferralLink() {
     const referralLink = document.getElementById('referralLink');
@@ -425,37 +433,37 @@ function getReferralCode() {
   }
 
   function shareOnTelegram() {
-    const referralCode = 'USER_REF_CODE'; // Replace with dynamic referral code
-    const message = shareMessages[savedLang].telegram + `https://www.yourwebsite.com?ref=${referralCode}`;
-    const url = `https://t.me/share/url?url=https://www.yourwebsite.com&text=${encodeURIComponent(message)}`;
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].telegram + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+    const url = `https://t.me/share/url?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 
   function shareOnTwitter() {
-    const referralCode = 'USER_REF_CODE'; // Replace with dynamic referral code
-    const message = shareMessages[savedLang].twitter + `https://www.yourwebsite.com?ref=${referralCode}`;
-    const url = `https://twitter.com/intent/tweet?url=https://www.yourwebsite.com&text=${encodeURIComponent(message)}`;
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].twitter + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+    const url = `https://twitter.com/intent/tweet?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 
   function shareOnInstagram() {
-    const referralCode = 'USER_REF_CODE'; // Replace with dynamic referral code
-    const message = shareMessages[savedLang].instagram + `https://www.yourwebsite.com?ref=${referralCode}`;
-    const url = `https://www.instagram.com/?url=https://www.yourwebsite.com&text=${encodeURIComponent(message)}`;
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].instagram + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+    const url = `https://www.instagram.com/?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 
   function shareOnWhatsApp() {
-    const referralCode = 'USER_REF_CODE'; // Replace with dynamic referral code
-    const message = shareMessages[savedLang].whatsapp + `https://www.yourwebsite.com?ref=${referralCode}`;
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].whatsapp + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
     const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 
     function shareOnTikTok() {
-    const referralCode = 'USER_REF_CODE'; // Replace with dynamic referral code
-    const message = shareMessages[savedLang].tiktok + `https://www.yourwebsite.com?ref=${referralCode}`;
-    const url = `https://www.tiktok.com/share?url=https://www.yourwebsite.com&text=${encodeURIComponent(message)}`;
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].tiktok + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+    const url = `https://www.tiktok.com/share?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
     }
     
@@ -485,6 +493,8 @@ function getReferralCode() {
     currentLang = lang;
     updateReferralLink(); // Recalculate the referral link when language changes
   }
+
+    let savedLang = 'en';
 
 
     window.onload = () => {
