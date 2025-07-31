@@ -284,13 +284,14 @@
   </div>
 
   <!-- Social Media Share Buttons -->
-  <div class="social-share-buttons">
-    <button id = "shareTelegram" onclick="shareOnTelegram()">Share on Telegram</button>
-    <button id = "shareTwitter" onclick="shareOnTwitter()">Share on Twitter</button>
-    <button id = "shareInstagram" onclick="shareOnInstagram()">Share on Instagram</button>
-    <button id = "shareWhatsApp" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
-    <button id = "shareTiktok" onclick="shareOnTikTok()">Share on TikTok</button>
-  </div>
+<div class="social-share-buttons">
+  <button class="share-btn" data-platform="telegram">Share on Telegram</button>
+  <button class="share-btn" data-platform="twitter">Share on Twitter</button>
+  <button class="share-btn" data-platform="instagram">Share on Instagram</button>
+  <button class="share-btn" data-platform="whatsapp">Share on WhatsApp</button>
+  <button class="share-btn" data-platform="tiktok">Share on TikTok</button>
+</div>
+
   </section>
 
   <footer>
@@ -432,57 +433,60 @@ function getReferralCode() {
     alert("Referral link copied to clipboard!");
   }
 
-  function shareOnTelegram() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].telegram + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-    const url = `https://t.me/share/url?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
+    // Update share URLs for platforms that support direct sharing
 
-  function shareOnTwitter() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].twitter + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-    const url = `https://twitter.com/intent/tweet?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
 
-  function shareOnInstagram() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].instagram + ` https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+function updateShareMessage() {
+  const referralCode = getReferralCode();
+  const baseUrl = `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
 
-    // Try copying the message to clipboard
-    navigator.clipboard.writeText(message).then(() => {
-        alert(`Message copied! Paste it in your Instagram reels or story:\n\n${message}`);
-    }).catch(err => {
-        // If copy fails, fallback to just showing the message
-        alert(`Copy this message and share it on Instagram:\n\n${message}`);
-        console.error("Clipboard copy failed:", err);
-    });
+  const platforms = {
+    telegram: shareMessages[savedLang].telegram + baseUrl,
+    twitter: shareMessages[savedLang].twitter + baseUrl,
+    whatsapp: shareMessages[savedLang].whatsapp + baseUrl,
+    // Instagram and TikTok handled by clipboard copy, no URL set
+  };
+
+  document.querySelectorAll('.share-btn').forEach(button => {
+    const platform = button.dataset.platform;
+    if (platforms[platform]) {
+      button.dataset.shareUrl = platforms[platform];
+      button.style.cursor = 'pointer';
+    } else {
+      delete button.dataset.shareUrl;
+      button.style.cursor = 'copy';
+    }
+  });
 }
 
+function copyMessageToClipboard(platform) {
+  const referralCode = getReferralCode();
+  const baseUrl = `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+  const message = shareMessages[savedLang][platform] + ' ' + baseUrl;
 
-  function shareOnWhatsApp() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].whatsapp + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
-
-  function shareOnTikTok() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].tiktok + ` https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-
-    // Try copying the message to clipboard
-    navigator.clipboard.writeText(message).then(() => {
-        alert(`Message copied! Paste it in your TikTok bio or video description:\n\n${message}`);
-    }).catch(err => {
-        // If copy fails, fallback to just showing the message
-        alert(`Copy this message and share it on TikTok:\n\n${message}`);
-        console.error("Clipboard copy failed:", err);
-    });
+  navigator.clipboard.writeText(message).then(() => {
+    alert(`Message copied! Paste it in your ${platform} reels or story:\n\n${message}`);
+  }).catch(err => {
+    alert(`Copy this message and share it on ${platform}:\n\n${message}`);
+    console.error("Clipboard copy failed:", err);
+  });
 }
 
-    
+document.querySelectorAll('.share-btn').forEach(button => {
+  button.addEventListener('click', (e) => {
+    e.preventDefault();
+    const platform = button.dataset.platform;
+
+    if (platform === 'instagram' || platform === 'tiktok') {
+      copyMessageToClipboard(platform);
+    } else {
+      const shareUrl = button.dataset.shareUrl;
+      if (shareUrl) {
+        window.open(shareUrl, '_blank');
+      }
+    }
+  });
+});
 
  /* 
  Alternatively
@@ -510,6 +514,7 @@ function getReferralCode() {
     savedLang = lang; // update global variable
     localStorage.setItem('preferredLang', lang);
     switchLanguage(lang); // update UI or messages if needed
+    updateShareMessage();
     updateReferralLink(); // Recalculate the referral link when language changes
   }
 
@@ -521,6 +526,7 @@ function getReferralCode() {
       switchLanguage(savedLang);
       document.getElementById('username').value = localStorage.getItem('userName') || '';
       document.getElementById('useremail').value = localStorage.getItem('userEmail') || '';
+      updateShareMessage();
 }; 
   </script>
 </body>
