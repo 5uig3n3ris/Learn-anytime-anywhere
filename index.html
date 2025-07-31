@@ -447,11 +447,19 @@ function getReferralCode() {
   }
 
   function shareOnInstagram() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].instagram + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-    const url = `https://www.instagram.com/?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].instagram + ` https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+
+    // Try copying the message to clipboard
+    navigator.clipboard.writeText(message).then(() => {
+        alert(`Message copied! Paste it in your Instagram reels or story:\n\n${message}`);
+    }).catch(err => {
+        // If copy fails, fallback to just showing the message
+        alert(`Copy this message and share it on Instagram:\n\n${message}`);
+        console.error("Clipboard copy failed:", err);
+    });
+}
+
 
   function shareOnWhatsApp() {
     const referralCode = getReferralCode(); // Replace with dynamic referral code
@@ -460,12 +468,20 @@ function getReferralCode() {
     window.open(url, '_blank');
   }
 
-    function shareOnTikTok() {
-    const referralCode = getReferralCode(); // Replace with dynamic referral code
-    const message = shareMessages[savedLang].tiktok + `https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
-    const url = `https://www.tiktok.com/share?url=https://learn-anytime-anywhere.vercel.app/&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-    }
+  function shareOnTikTok() {
+    const referralCode = getReferralCode(); // Replace with dynamic referral code
+    const message = shareMessages[savedLang].tiktok + ` https://learn-anytime-anywhere.vercel.app/?ref=${referralCode}`;
+
+    // Try copying the message to clipboard
+    navigator.clipboard.writeText(message).then(() => {
+        alert(`Message copied! Paste it in your TikTok bio or video description:\n\n${message}`);
+    }).catch(err => {
+        // If copy fails, fallback to just showing the message
+        alert(`Copy this message and share it on TikTok:\n\n${message}`);
+        console.error("Clipboard copy failed:", err);
+    });
+}
+
     
 
  /* 
