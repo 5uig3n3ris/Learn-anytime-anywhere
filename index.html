@@ -504,24 +504,24 @@ function getReferralCode() {
 */
 
 
+  let savedLang = 'en';
   // Set the current language dynamically (e.g., based on user selection or browser settings)
   function setLanguage(lang) {
-    currentLang = lang;
+    savedLang = lang; // update global variable
+    localStorage.setItem('preferredLang', lang);
+    switchLanguage(lang); // update UI or messages if needed
     updateReferralLink(); // Recalculate the referral link when language changes
   }
 
-    let savedLang = 'en';
-
-
     window.onload = () => {
       updateReferralLink();
-      const savedLang = localStorage.getItem('preferredLang') || navigator.language.slice(0,2);
-      if (!['en','es','fr','ar', 'per'].includes(savedLang)) savedLang = 'en';
+      savedLang = localStorage.getItem('preferredLang') || navigator.language.slice(0,2);
+      if (!['en','es','fr','ar','per'].includes(savedLang)) savedLang = 'en';
       document.getElementById('languageSelect').value = savedLang;
       switchLanguage(savedLang);
       document.getElementById('username').value = localStorage.getItem('userName') || '';
       document.getElementById('useremail').value = localStorage.getItem('userEmail') || '';
-    };
+}; 
   </script>
 </body>
 </html>
